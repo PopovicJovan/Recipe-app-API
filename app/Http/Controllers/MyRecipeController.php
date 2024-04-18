@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RecipeRequest;
 use App\Http\Resources\RecipeResource;
 use App\Http\Traits\includedRelations;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class MyRecipeController extends Controller
 {
@@ -48,31 +48,18 @@ class MyRecipeController extends Controller
 
     }
 
-    public function store(Request $request)
+    public function store(Request $request, RecipeRequest $recipeRequest)
     {
         $this->authorize('create', Recipe::class);
         $user = $request->user();
 
-        $validatedValues = Validator::make($request->only(['title', 'content', 'category', 'components']),[
-            'title' => 'required|string',
-            'content' => 'required|string',
-            'category' => 'required|in:cookie,pasta,other',
-            'components' => 'required'
-        ]);
-
-        if($validatedValues->fails()) return response()->json([
-            "error" => "Validation error!"
-        ], 400);
-
+        $recipeRequest->validated();
 
         $recipe = $user->recipes()->create([
             'title' => $request->input('title'),
             'content' => $request->input('content'),
-            'components' => implode(',',
-                array_map('trim',
-                    explode(',',$request->input('components'))
-                )
-            ),
+            'components' => implode(',', array_map('trim',
+                            explode(',',$request->input('components')))),
             'category' => $request->input('category')
         ]);
 
@@ -106,7 +93,8 @@ class MyRecipeController extends Controller
 
     public function update(Request $request, int $my_recipe)
     {
-        if(!$request->only(['title', 'content', 'category', 'components']))
+        $filteredRequest = $request->only(['title', 'content', 'category', 'components']);
+        if(!$filteredRequest)
             return response()->json([
             "error" => "You haven't sent anything!"
             ], 400);
@@ -116,7 +104,7 @@ class MyRecipeController extends Controller
 
         if(!$my_recipe) return response()->json([], 204);
 
-        $my_recipe->update($request->only(['title', 'content', 'category', 'components']));
+        $my_recipe->update($filteredRequest);
 
         return response()->json([
             "recipes" => new RecipeResource($my_recipe)

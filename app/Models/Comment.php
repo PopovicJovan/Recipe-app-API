@@ -22,27 +22,4 @@ class Comment extends Model
         return $this->belongsTo(Recipe::class);
     }
 
-//    public static function shouldRelationBeIncluded(string $relation, ?array $relations=null)
-//    {
-//        $relations = $relations ?? Comment::$relationsForComment;
-//        return in_array($relation, $relations);
-//    }
-//
-//    public static function passedRelations(): array
-//    {
-//        $relations = request('include');
-//        $relations = array_map('trim', explode(',', $relations));
-//        return $relations;
-//    }
-//
-//    public static function forwardedExpectedRelations(): array
-//    {
-//        $includedRelations = [];
-//        foreach (Comment::passedRelations() as $passed){
-//            if(Comment::shouldRelationBeIncluded($passed))
-//                $includedRelations[] = $passed;
-//        }
-//
-//        return $includedRelations;
-//    }
 }
