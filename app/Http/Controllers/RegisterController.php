@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
+
     public function store(Request $request)
     {
         $request->validate([
@@ -25,7 +26,9 @@ class RegisterController extends Controller
         $user = new User();
         $user->name = $request->input('name');
         $user->email = $request->input('email');
+        $user->photo = $request->file('photo')->getClientOriginalName();
         $user->password = Hash::make($request->input('password'));
+        $request->file('photo')->storeAs('public/images/', $user->photo);
 
 
         if ($user->save()) return response([
