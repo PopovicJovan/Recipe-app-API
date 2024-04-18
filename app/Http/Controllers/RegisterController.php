@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegistrationRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -9,13 +10,9 @@ use Illuminate\Support\Facades\Hash;
 class RegisterController extends Controller
 {
 
-    public function store(Request $request)
+    public function store(Request $request, RegistrationRequest $registrationRequest)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'password' => 'required|min:8'
-        ]);
+        $registrationRequest->validated();
 
         $user = User::where('email', $request->input('email'))->first();
 
