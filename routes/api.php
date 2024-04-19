@@ -7,10 +7,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\MyRecipeController;
 use App\Http\Controllers\CommentController;
+use App\Http\Resources\UserResource;
 
 
 Route::middleware('jwt.auth')->get('/user', function (Request $request) {
-    return $request->user();
+    return new UserResource($request->user());
 });
 
 Route::post('/register', [RegisterController::class, 'store'])->name('register');
@@ -26,3 +27,9 @@ Route::resource('/my-recipe', MyRecipeController::class)
 
 Route::resource('recipe.comment', CommentController::class)->scoped(['recipe' => 'comment'])
         ->middleware('jwt.auth');
+
+Route::post('/recipe/{recipe}/my-rate', [\App\Http\Controllers\RateController::class, 'store'])
+    ->middleware('jwt.auth');
+Route::get('/recipe/{recipe}/my-rate', [\App\Http\Controllers\RateController::class, 'show'])
+    ->middleware('jwt.auth');
+

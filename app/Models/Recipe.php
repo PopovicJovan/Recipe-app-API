@@ -28,6 +28,11 @@ class Recipe extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function rates(): HasMany
+    {
+        return $this->hasMany(Rate::class);
+    }
+
     public function scopeFilter(Builder|QueryBuilder $query, array $filters): Builder|QueryBuilder
     {
         return $query->when($filters['text'] ?? null, function ($query) use ($filters){
