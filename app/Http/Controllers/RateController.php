@@ -39,6 +39,7 @@ class RateController extends Controller
     {
         $recipe =  Recipe::find($recipe);
         if(!$recipe) return response()->json([], 204);
+
         $rate = Rate::where('user_id', request()->user()->id)->where('recipe_id',$recipe->id )->get();
         if (!request('rate')) return response()->json([
             "error" => "You did not send rate"

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Rate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -21,6 +22,8 @@ class RecipeResource extends JsonResource
             'title'=> $this->title,
             'content'=> $this->content,
             'category'=> $this->category,
+            'avg_rate' => Rate::where('recipe_id', $this->id)->avg('rate'),
+            'num_rate' => Rate::where('recipe_id', $this->id)->count(),
             'components'=> array_values(explode(',', $this->components)),
             'user' => new UserResource($this->whenLoaded('user')),
             'comments' => CommentResource::collection($this->whenLoaded('comments')),

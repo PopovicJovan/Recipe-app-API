@@ -20,16 +20,19 @@ Route::delete('/logout', [AuthController::class, 'logout'])
         ->middleware('jwt.auth')
         ->name('logout');
 
-Route::resource('/recipe', RecipeController::class)->only(['index', 'show']);
-Route::resource('/my-recipe', MyRecipeController::class)
-    ->middleware('jwt.auth')
-    ->only(['index', 'show', 'store', 'update', 'destroy']);
 
-Route::resource('recipe.comment', CommentController::class)->scoped(['recipe' => 'comment'])
-        ->middleware('jwt.auth');
 
-Route::post('/recipe/{recipe}/my-rate', [\App\Http\Controllers\RateController::class, 'store'])
-    ->middleware('jwt.auth');
-Route::get('/recipe/{recipe}/my-rate', [\App\Http\Controllers\RateController::class, 'show'])
-    ->middleware('jwt.auth');
+Route::middleware(['jwt.auth'])->group(function (){
+
+    Route::resource('/recipe', RecipeController::class)->only(['index', 'show']);
+    Route::resource('/my-recipe', MyRecipeController::class)->except(['create', 'edit']);
+
+    Route::resource('recipe.comment', CommentController::class)->scoped(['recipe' => 'comment'])->except(['create', 'edit']);
+
+    Route::post('/recipe/{recipe}/my-rate', [\App\Http\Controllers\RateController::class, 'store']);
+    Route::get('/recipe/{recipe}/my-rate', [\App\Http\Controllers\RateController::class, 'show']);
+    Route::put('/recipe/{recipe}/my-rate', [\App\Http\Controllers\RateController::class, 'update']);
+
+});
+
 
