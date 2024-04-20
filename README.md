@@ -1,4 +1,4 @@
-This API is written in order to unable you to make some web app where user would be able to make profile and post recipes and comment other recipes and so on, so on..
+This API is written in order to be part of some web app where user would be able to make profile and post recipes and comment other recipes and rate it and so on, so on..
 
 # Connected to user:
 
