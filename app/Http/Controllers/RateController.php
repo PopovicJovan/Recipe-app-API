@@ -14,7 +14,7 @@ class RateController extends Controller
                 ->where('recipe_id',$recipe->id )->get()){
            return response()->json([], 400);
        };
-       if(!$recipe) return response()->json([], 204);
+       if(!$recipe) return response()->json([], 400);
        if (!request('rate')) return response()->json([
            "error" => "You did not send rate"
        ], 400);
@@ -29,16 +29,18 @@ class RateController extends Controller
     public function show(int $recipe)
     {
         $recipe =  Recipe::find($recipe);
-        if(!$recipe) return response()->json([], 204);
+        if(!$recipe) return response()->json([], 400);
         $rate = Rate::where('user_id', request()->user()->id)->where('recipe_id',$recipe->id )->get();
-        return response()->json($rate, 200);
+        return response()->json([
+            "rate" => $rate->rate
+        ], 200);
 
     }
 
     public function update(int $recipe)
     {
         $recipe =  Recipe::find($recipe);
-        if(!$recipe) return response()->json([], 204);
+        if(!$recipe) return response()->json([], 400);
 
         $rate = Rate::where('user_id', request()->user()->id)->where('recipe_id',$recipe->id )->get();
         if (!request('rate')) return response()->json([

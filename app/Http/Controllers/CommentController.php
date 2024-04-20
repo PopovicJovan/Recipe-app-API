@@ -17,8 +17,6 @@ class CommentController extends Controller
         $includedRelations = $this->forwardedExpected(Comment::$relationsForComment);
         $comments = Comment::all()->where('recipe_id', $recipe);
 
-        if(empty($comments)) return response()->json([], 204);
-
         if ($includedRelations) $comments = Comment::with(...$includedRelations)
                                                     ->where('recipe_id', $recipe)
                                                     ->get()->sortByDesc('created_at');
@@ -32,7 +30,7 @@ class CommentController extends Controller
     {
         $this->authorize('create', [Comment::class, request()->user()]);
         $recipe = Recipe::find($recipe);
-        if(!$recipe) return response()->json([], 204);
+        if(!$recipe) return response()->json([], 400);
 
         $request->validate(['content' => 'required|string']);
 
@@ -41,7 +39,9 @@ class CommentController extends Controller
             'content' => $request->input('content')
         ]);
 
-        return new CommentResource($comment);
+        return response()->json([
+            "comments" => new CommentResource($comment)
+        ]);
     }
 
     public function show(int $recipe, int $comment)
@@ -54,25 +54,31 @@ class CommentController extends Controller
         if ($includedRelations) $comment = Comment::with(...$includedRelations)
                                                     ->find($comment)->first();
 
-        return response()->json(new CommentResource($comment));
+        return response()->json([
+            "comments" => new CommentResource($comment)
+        ]);
     }
 
     public function update(Request $request, int $recipe, int $comment)
     {
         $comment = Comment::find($comment);
         $this->authorize('update', [Comment::class, request()->user(), $comment]);
-        if(!$request->input('content')) return response()->json('No content!', 400);
+        if(!$request->input('content')) return response()->json([
+            "error" =>'No content!'
+        ], 400);
         $comment->update([
             'content' => $request->input('content')
         ]);
-        return new CommentResource($comment);
+        return response()->json([
+            "comments" => new CommentResource($comment)
+        ]);
     }
 
     public function destroy(int $recipe, int $comment)
     {
         $comment = Comment::find($comment);
         $this->authorize('delete', [Comment::class, request()->user(), $comment]);
-        if(!$comment) return response()->json([],204);
+        if(!$comment) return response()->json([],400);
         $comment->delete();
         return response()->json([],204);
     }

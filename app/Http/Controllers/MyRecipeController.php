@@ -120,8 +120,6 @@ class MyRecipeController extends Controller
 
         if(!$my_recipe) return response()->json([], 400);
 
-        return response()->json([
-            "recipes" => new RecipeResource($my_recipe)
-        ], 200);
+        return response()->json([], 204);
     }
 }
