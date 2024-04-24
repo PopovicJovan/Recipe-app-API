@@ -4,7 +4,7 @@ This API is written in order to be part of some web app where user would be able
 
 ## _**How to register user?**_
 
-``` bash
+``` xml
 Endpoint: root/api/register
 Method: POST
 Description: Register a new user.
@@ -31,7 +31,7 @@ If everything is ok, you'll get:
 
 ## _**How to login user?**_
 
-``` bash
+``` xml
 Endpoint: root/api/login
 Method: POST
 Description: Login an existing user.
@@ -59,7 +59,7 @@ Returns an authentication token.
 
 ## _**How to logout user?**_
 
-``` bash
+``` xml
 Endpoint: root/api/logout
 Method: DELETE
 Description: Log out the authenticated user.
@@ -72,11 +72,28 @@ Response:
 
  ```
 
+## How to refresh token?
+
+``` xml
+Endpoint: root/api/refresh
+Method: POST
+Description: Token refresh.
+Request Header:
+    Authorization: Bearer token
+Response:
+    {
+       "access_token": token,
+       "token_type": "bearer",
+       "expires_in": 
+    }
+
+ ```
+
 # Connected to recipes:
 
 ## Get all recipes:
 
-``` bash
+``` xml
 Endpoint: root/api/recipe
 Method: GET
 Description: Retrieve all recipes
@@ -127,7 +144,7 @@ Recipe will be returned in format:
 
 ## Get all recipes posted by specific user:
 
-``` bash
+``` xml
 Endpoint: root/api/my-recipe
 Method: GET
 Description: Retrieve all recipes posted by specific user
@@ -178,7 +195,7 @@ Recipe will be returned in format:
 
 ## Get one recipe:
 
-``` bash
+``` xml
 Endpoint: root/api/recipe/{idOfRecipe}
 Method: GET
 Description: Retrieve one recipe
@@ -228,7 +245,7 @@ Recipe will be returned in format:
 
 ## Create recipe:
 
-``` bash
+``` xml
 Endpoint: root/api/my-recipe
 Method: POST
 Description: Create recipe
@@ -257,10 +274,10 @@ Returns created recipe:
 
 ## Update specific recipe:
 
-``` bash
+``` xml
 Warning: Users can only update recipes posted by themself!
 Endpoint: root/api/my-recipe/{idOfRecipe}
-Method: POST
+Method: PUT
 Description: Update one recipe
 Request Header:
     Authorization: Bearer token
@@ -291,7 +308,7 @@ Returns updated recipe:
 
 ## Delete specific recipe:
 
-``` bash
+``` xml
 Warning: Users can only delete recipes posted by themself!
 Endpoint: root/api/my-recipe/{idOfRecipe}
 Method: DELETE
@@ -310,7 +327,7 @@ Else:
 
 ## Create comment:
 
-``` bash
+``` xml
 Endpoint: root/api/recipe/{idOfRecipe}/comment
 Method: POST
 Description: Create comment
@@ -336,7 +353,7 @@ Else:
 
 ## Get all comments from one recipe:
 
-``` bash
+``` xml
 Endpoint: root/api/recipe/{idOfRecipe}/comment
 Method: GET
 Description: Get all comments
@@ -373,7 +390,7 @@ Comment will be returned in format:
 
 ## Get specific comment:
 
-``` bash
+``` xml
 Endpoint: root/api/recipe/{idOfRecipe}/comment/{idOfComment}
 Method: GET
 Description: Get specific comment
@@ -395,7 +412,7 @@ Comment will be returned in format:
 
 ## Update comment:
 
-``` bash
+``` xml
 Warning: Users can only update comments posted by themself!
 Endpoint: root/api/recipe/{idOfRecipe}/comment/{idOfComment}
 Method: PUT
@@ -441,7 +458,7 @@ Else:
 
 # Create rate:
 
-``` bash
+``` xml
 Endpoint: root/api/recipe/{idOfRecipe}/my-rate
 Method: POST
 Description: Create rate
@@ -467,9 +484,9 @@ Else:
 
 # See rate of specific user on recipe:
 
-``` bash
+``` xml
 Endpoint: root/api/recipe/{idOfRecipe}/my-rate
-Method: POST
+Method: GET
 Description: See rate
 Request Header:
     Authorization: Bearer token of comment creator
@@ -485,7 +502,7 @@ Else:
 
 # Update rate of specific user on recipe:
 
-``` bash
+``` xml
 Endpoint: root/api/recipe/{idOfRecipe}/my-rate
 Method: PUT
 Description: See rate
